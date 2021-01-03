@@ -1,0 +1,32 @@
+{
+	"name": "trackpack",
+	"version": "1.0.0",
+	"license": "MIT",
+	"bin": "dist/trackpack.js",
+	"engines": {
+		"node": ">=10"
+	},
+	"scripts": {
+		"build": "tsc",
+		"start": "npm run build && dist/trackpack.js"
+	},
+	"files": [
+		"dist/trackpack.js"
+	],
+	"dependencies": {
+		"dotenv": "^8.2.0",
+		"ink": "^3.0.8",
+		"ink-table": "^3.0.0",
+		"node-fetch": "^2.6.1",
+		"react": "^17.0.1"
+	},
+	"devDependencies": {
+		"@types/node": "^14.14.19",
+		"@types/node-fetch": "^2.5.7",
+		"@types/react": "^17.0.0",
+		"chalk": "^4.1.0",
+		"eslint-plugin-react": "^7.22.0",
+		"eslint-plugin-react-hooks": "^4.2.0",
+		"typescript": "^4.1.3"
+	}
+}
