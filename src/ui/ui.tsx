@@ -3,15 +3,16 @@ import Table from 'ink-table';
 import { Text } from 'ink';
 import { ApiService } from '../services/api-service';
 
+const App = (cliOptions: CliOptions) => {
+  const { trackingNumber } = cliOptions;
+  const validOption = Object.keys(cliOptions).find((option) => cliOptions[option]);
+  const [data] = ApiService(validOption, trackingNumber);
 
-const App = () => {
-  const [data] = ApiService("get", "398865169653");
-  
   return data?.data?.trackings?.length ? (
     <Table
       data={data!.data?.trackings.map((tracking: any) => ({
-        id: tracking.id,
-        active: tracking.active,
+        tracking: tracking.tracking_number,
+        delivery: tracking.expected_delivery ?? tracking.shipment_delivery_date,
       }))}
     />
   ) : (

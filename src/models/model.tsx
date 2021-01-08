@@ -10,3 +10,9 @@ interface PostRequestBody {
 interface TrackingNumber {
   tracking_number: string;
 }
+
+interface CliOptions {
+  add: boolean;
+  remove: boolean;
+  trackingNumber: string;
+}
