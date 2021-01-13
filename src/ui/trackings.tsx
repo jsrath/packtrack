@@ -1,12 +1,12 @@
 import React from 'react';
 import Table from 'ink-table';
 import { Text } from 'ink';
-import { ApiService } from '../services/api-service';
+import { TrackingsApiService } from '../services/trackings-api-service';
 
-const App = (cliOptions: CliOptions) => {
-  const { trackingNumber } = cliOptions;
-  const validOption = Object.keys(cliOptions).find((option) => cliOptions[option]);
-  const [data] = ApiService(validOption, trackingNumber);
+const Trackings = (trackingOptions: TrackingOptions) => {
+  const { trackingNumber } = trackingOptions;
+  const validOption = Object.keys(trackingOptions).find((option) => trackingOptions[option]);
+  const [data] = TrackingsApiService(validOption, trackingNumber);
 
   function isDataValid(data: { id: string }[]): boolean {
     return data.length && !!data[0].id;
@@ -24,5 +24,5 @@ const App = (cliOptions: CliOptions) => {
   );
 };
 
-module.exports = App;
-export default App;
+module.exports = Trackings;
+export default Trackings;

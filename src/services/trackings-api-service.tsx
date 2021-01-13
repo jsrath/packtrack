@@ -3,18 +3,21 @@ import { useEffect, useState } from 'react';
 import fetch, { Headers } from 'node-fetch';
 import * as path from 'path';
 
-export function ApiService(option: string, trackingNumber: string): [Tracking[]] {
+export function TrackingsApiService(option: string, trackingNumber: string): [Tracking[]] {
   config({ path: path.join(__dirname, '../../.env') });
-  const url = `${process.env.BASE_URL}`;
+
+  const url = `${process.env.TRACKINGS_URL}`;
   const headers = new Headers({
     'aftership-api-key': `${process.env.API_KEY}`,
     'Content-Type': 'application/json',
   });
+
   const tracking = {
     tracking: {
       tracking_number: trackingNumber,
     },
   };
+
   const [data, setData] = useState<Tracking[]>([]);
   const [apiData, setApiData] = useState<Tracking[]>();
 
@@ -24,7 +27,6 @@ export function ApiService(option: string, trackingNumber: string): [Tracking[]]
       apiData
         .filter((tracking: any) => tracking.tracking_number === trackingNumber)
         .map((tracking) => tracking.slug);
-
     return slug ? `${url}/${slug}/${trackingNumber}` : undefined;
   }
 
@@ -34,23 +36,19 @@ export function ApiService(option: string, trackingNumber: string): [Tracking[]]
       headers,
       body: JSON.stringify(tracking),
     });
-
     const json = await response.json();
     setData([json.data.tracking]);
   }
 
   async function getOrRemovePackage(isGetRequest: boolean) {
     const fetchUrl = generateUrlWithSlug();
-
     if (!fetchUrl) {
       return;
     }
-
     const response = await fetch(fetchUrl, {
       method: isGetRequest ? 'GET' : 'DELETE',
       headers,
     });
-
     const json = await response.json();
     setData([json.data.tracking]);
   }
@@ -59,7 +57,6 @@ export function ApiService(option: string, trackingNumber: string): [Tracking[]]
     if (!apiData) {
       return;
     }
-
     setData(apiData);
   }
 

@@ -11,14 +11,19 @@ interface TrackingNumber {
   tracking_number: string;
 }
 
-interface CliOptions {
+interface TrackingOptions {
   add: boolean;
   remove: boolean;
+  courier: string;
   trackingNumber: string;
 }
 
+interface CourierOptions {
+  searchTerm: string; 
+}
+
 interface Data {
-  data: {}
+  data: {};
 }
 
 interface Tracking {
@@ -28,4 +33,10 @@ interface Tracking {
   shipment_delivery_date: string;
   slug: string;
   [property: string]: string | boolean | null;
+}
+
+interface Courier {
+  slug: string;
+  name: string;
+  [property: string]: string;
 }
