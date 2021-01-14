@@ -1,10 +1,9 @@
-import { config } from 'dotenv';
 import { useEffect, useState } from 'react';
 import fetch, { Headers } from 'node-fetch';
-import * as path from 'path';
+import { getEnvironmentVariables } from './config-service';
 
-export function TrackingsApiService(option: string, trackingNumber: string): [Tracking[]] {
-  config({ path: path.join(__dirname, '../../.env') });
+export function TrackingsApiService(option: string, courier: string, trackingNumber: string): [Tracking[]] {
+  getEnvironmentVariables();
 
   const url = `${process.env.TRACKINGS_URL}`;
   const headers = new Headers({
@@ -15,6 +14,7 @@ export function TrackingsApiService(option: string, trackingNumber: string): [Tr
   const tracking = {
     tracking: {
       tracking_number: trackingNumber,
+      slug: courier
     },
   };
 
@@ -22,12 +22,12 @@ export function TrackingsApiService(option: string, trackingNumber: string): [Tr
   const [apiData, setApiData] = useState<Tracking[]>();
 
   function generateUrlWithSlug(): string {
-    const slug =
-      apiData?.length &&
-      apiData
-        .filter((tracking: any) => tracking.tracking_number === trackingNumber)
-        .map((tracking) => tracking.slug);
+    const slug = courier ? courier : getSlugFromApiData(); 
     return slug ? `${url}/${slug}/${trackingNumber}` : undefined;
+  }
+
+  function getSlugFromApiData(): string | undefined {
+    return apiData?.length && apiData.filter((tracking: any) => tracking.tracking_number === trackingNumber)[0].slug;
   }
 
   async function addPackage() {

@@ -4,9 +4,9 @@ import { Text } from 'ink';
 import { TrackingsApiService } from '../services/trackings-api-service';
 
 const Trackings = (trackingOptions: TrackingOptions) => {
-  const { trackingNumber } = trackingOptions;
+  const { courier, trackingNumber } = trackingOptions;
   const validOption = Object.keys(trackingOptions).find((option) => trackingOptions[option]);
-  const [data] = TrackingsApiService(validOption, trackingNumber);
+  const [data] = TrackingsApiService(validOption, courier, trackingNumber);
 
   function isDataValid(data: { id: string }[]): boolean {
     return data.length && !!data[0].id;

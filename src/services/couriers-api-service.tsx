@@ -1,11 +1,9 @@
-import { config } from 'dotenv';
 import { useEffect, useState } from 'react';
 import fetch, { Headers } from 'node-fetch';
-import * as path from 'path';
+import { getEnvironmentVariables } from './config-service';
 
 export function CouriersApiService(): [Courier[]] {
-  config({ path: path.join(__dirname, '../../.env') });
-
+  getEnvironmentVariables();
   const url = `${process.env.COURIERS_URL}`;
   const headers = new Headers({
     'aftership-api-key': `${process.env.API_KEY}`,
