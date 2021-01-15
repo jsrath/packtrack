@@ -1,42 +1,53 @@
-interface ApiResponse {
-  data: { trackings?: Tracking[] };
-  meta: object | undefined;
-}
-
-interface PostRequestBody {
-  tracking: TrackingNumber;
-}
-
-interface TrackingNumber {
-  tracking_number: string;
-}
-
-interface TrackingOptions {
+export interface TrackingOptions {
   add: boolean;
   remove: boolean;
   courier: string;
   trackingNumber: string;
 }
 
-interface CourierOptions {
-  searchTerm: string; 
+export interface CourierOptions {
+  searchTerm: string;
 }
 
-interface Data {
-  data: {};
+export interface ApiResponse {
+  meta: Meta;
+  data: Data;
 }
 
-interface Tracking {
+export interface Meta {
+  code: number;
+}
+
+export interface Data {
+  slug: string;
+  tag: string;
+  trackings: Tracking[];
+}
+
+export interface Tracking {
   id: string;
   tracking_number: string;
-  expected_delivery: string;
-  shipment_delivery_date: string;
   slug: string;
-  [property: string]: string | boolean | null;
+  active: boolean;
+  delivery_time: number;
+  expected_delivery: null | string;
+  shipment_delivery_date: null | string;
+  tag: string;
+  subtag: string;
+  subtag_message: string;
+  title: string;
+  checkpoints: Checkpoint[];
+  courier_tracking_link: string;
 }
 
-interface Courier {
+export interface Checkpoint {
+  slug: string;
+  city: null | string;
+  location: null | string;
+  tag: string;
+}
+
+export interface Courier {
   slug: string;
   name: string;
-  [property: string]: string;
 }

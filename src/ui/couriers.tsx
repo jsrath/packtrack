@@ -1,7 +1,8 @@
-import React from 'react';
-import Table from 'ink-table';
-import { Text } from 'ink';
-import { CouriersApiService } from '../services/couriers-api-service';
+import React from "react";
+import Table from "ink-table";
+import { Text } from "ink";
+import { CouriersApiService } from "../services/couriers-api-service";
+import { Courier, CourierOptions } from "../models/model";
 
 const Couriers = (courierOptions: CourierOptions) => {
   const [data] = CouriersApiService();
@@ -16,14 +17,12 @@ const Couriers = (courierOptions: CourierOptions) => {
       return data;
     }
 
-    return data.filter((courier) =>
-      courier.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase()),
-    );
+    return data.filter((courier: Courier) => courier.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase()));
   }
 
   return isDataValid(data) ? (
     <Table
-      data={filterCouriers(data).map((courier: any) => ({
+      data={filterCouriers(data).map((courier: Courier) => ({
         Name: courier.name,
         Use: courier.slug,
       }))}

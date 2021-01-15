@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import React from 'react';
-import { render } from 'ink';
-import Trackings from './ui/trackings';
-import Couriers from './ui/couriers';
-import meow from 'meow';
+import React from "react";
+import { render } from "ink";
+import Trackings from "./ui/trackings";
+import Couriers from "./ui/couriers";
+import meow from "meow";
 
 const cli = meow(
   `
@@ -23,24 +23,24 @@ const cli = meow(
   {
     flags: {
       add: {
-        type: 'boolean',
+        type: "boolean",
         default: false,
-        alias: 'a',
+        alias: "a",
       },
       remove: {
-        type: 'boolean',
+        type: "boolean",
         default: false,
-        alias: 'r',
+        alias: "r",
       },
       courier: {
-        type: 'string',
-        default: '',
-        alias: 'c',
+        type: "string",
+        default: "",
+        alias: "c",
       },
       list: {
-        type: 'boolean',
+        type: "boolean",
         default: false,
-        alias: 'l',
+        alias: "l",
       },
     },
   },
