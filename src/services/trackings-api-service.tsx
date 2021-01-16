@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import fetch, { Headers } from "node-fetch";
 import { getEnvironmentVariables, TRACKINGS_URL } from "./config-service";
-import { Tracking } from "../models/model";
+import { ApiResponse, Tracking } from "../models/model";
 
-export function TrackingsApiService(option: string, courier: string, trackingNumber: string): Tracking[][] {
+export function TrackingsApiService(option: string, courier: string, trackingNumber: string): Tracking[][] | string[] {
   getEnvironmentVariables();
   const headers = new Headers({
     "aftership-api-key": `${process.env.API_KEY}`,
@@ -19,14 +19,17 @@ export function TrackingsApiService(option: string, courier: string, trackingNum
 
   const [data, setData] = useState<Tracking[]>([]);
   const [apiData, setApiData] = useState<Tracking[]>();
+  const [apiError, setApiError] = useState<string>();
 
   function generateUrlWithSlug(): string {
     const slug = courier ? courier : getSlugFromApiData();
     return slug ? `${TRACKINGS_URL}/${slug}/${trackingNumber}` : undefined;
   }
 
-  function getSlugFromApiData(): string | undefined {
-    return apiData?.length && apiData.filter((tracking: Tracking) => tracking.tracking_number === trackingNumber)[0].slug;
+  function getSlugFromApiData(): string | void {
+    const tracking =
+      apiData?.length && apiData.filter((tracking: Tracking) => tracking.tracking_number === trackingNumber)[0];
+    return tracking ? tracking.slug : setApiError("Invalid courier or tracking number");
   }
 
   async function addPackage() {
@@ -35,7 +38,12 @@ export function TrackingsApiService(option: string, courier: string, trackingNum
       headers,
       body: JSON.stringify(tracking),
     });
-    const json = await response.json();
+    const json: ApiResponse = await response.json();
+    if (json.meta.code !== 201) {
+      setApiError(json.meta.message);
+      return;
+    }
+
     setData([json.data.tracking]);
   }
 
@@ -48,7 +56,11 @@ export function TrackingsApiService(option: string, courier: string, trackingNum
       method: isGetRequest ? "GET" : "DELETE",
       headers,
     });
-    const json = await response.json();
+    const json: ApiResponse = await response.json();
+    if (json.meta.code !== 201) {
+      setApiError(json.meta.message);
+      return;
+    }
     setData([json.data.tracking]);
   }
 
@@ -58,8 +70,6 @@ export function TrackingsApiService(option: string, courier: string, trackingNum
     }
 
     setData(apiData);
-
-    apiData.forEach((data) => data.checkpoints[data.checkpoints.length - 1]);
   }
 
   useEffect(() => {
@@ -94,5 +104,15 @@ export function TrackingsApiService(option: string, courier: string, trackingNum
     }
   }, [apiData]);
 
-  return [data];
+  useEffect(() => {}, [apiError]);
+
+  if (data.length) {
+    return [data];
+  }
+
+  if (apiError) {
+    return [apiError];
+  }
+
+  return [];
 }

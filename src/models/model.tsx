@@ -16,12 +16,15 @@ export interface ApiResponse {
 
 export interface Meta {
   code: number;
+  message?: string;
+  type?: string;
 }
 
 export interface Data {
   slug: string;
   tag: string;
-  trackings: Tracking[];
+  tracking?: Tracking,
+  trackings?: Tracking[];
 }
 
 export interface Tracking {
@@ -44,6 +47,7 @@ export interface Checkpoint {
   slug: string;
   city: null | string;
   location: null | string;
+  message: string;
   tag: string;
 }
 

@@ -9,22 +9,33 @@ const Trackings = (trackingOptions: TrackingOptions) => {
   const { courier, trackingNumber } = trackingOptions;
   const validOption = Object.keys(trackingOptions).find((option) => trackingOptions[option]);
   const [data] = TrackingsApiService(validOption, courier, trackingNumber);
-
-  function isDataValid(data: { id: string }[]): boolean {
-    return data.length && !!data[0].id;
+  const errorMessage = typeof data === "string" && data;
+  const tracking = Array.isArray(data) && data;
+    
+  function isDataValid(data: Tracking[] | string): boolean {
+    if (typeof data === "string") {
+      return false;
+    }
+    return !!(data.length && data[0]?.id);
   }
 
-  return isDataValid(data) ? (
+  const CustomCell = ({ children }: React.PropsWithChildren<{}>) => <Text wrap="end">{children}</Text>;
+  const CustomSkeleton = ({ children }: React.PropsWithChildren<{}>) => <Text color="green">{children}</Text>;
+
+  return isDataValid(tracking) ? (
     <Table
-      data={data.map((tracking: Tracking) => ({
+      cell={CustomCell}
+      skeleton={CustomSkeleton}
+      data={tracking.map((tracking: Tracking) => ({
         Tracking: tracking.tracking_number,
         Courier: tracking.slug,
-        Location: tracking.checkpoints[tracking.checkpoints.length - 1].city,
+        Location: tracking.checkpoints[tracking.checkpoints.length - 1]?.location ?? "",
+        Status: tracking.checkpoints[tracking.checkpoints.length - 1]?.message ?? "",
         Delivery: formatRelative(parseISO(tracking.expected_delivery ?? tracking.shipment_delivery_date), new Date()),
       }))}
     />
   ) : (
-    <Text></Text>
+    <Text>{errorMessage}</Text>
   );
 };
 
