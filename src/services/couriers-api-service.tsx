@@ -6,7 +6,7 @@ import { Courier } from "../models/model";
 export function CouriersApiService(): Courier[][] {
   getEnvironmentVariables();
   const headers = new Headers({
-    "aftership-api-key": `${process.env.API_KEY}`,
+    "aftership-api-key": process.env.API_KEY,
     "Content-Type": "application/json",
   });
 

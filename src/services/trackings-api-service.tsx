@@ -6,7 +6,7 @@ import { ApiResponse, Tracking } from "../models/model";
 export function TrackingsApiService(option: string, courier: string, trackingNumber: string): Tracking[][] | string[] {
   getEnvironmentVariables();
   const headers = new Headers({
-    "aftership-api-key": `${process.env.API_KEY}`,
+    "aftership-api-key": process.env.API_KEY,
     "Content-Type": "application/json",
   });
 

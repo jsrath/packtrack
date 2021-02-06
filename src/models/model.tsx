@@ -33,8 +33,8 @@ export interface Tracking {
   slug: string;
   active: boolean;
   delivery_time: number;
-  expected_delivery: null | string;
-  shipment_delivery_date: null | string;
+  expected_delivery: string | null;
+  shipment_delivery_date: string | null;
   tag: string;
   subtag: string;
   subtag_message: string;
@@ -45,8 +45,8 @@ export interface Tracking {
 
 export interface Checkpoint {
   slug: string;
-  city: null | string;
-  location: null | string;
+  city: string | null;
+  location: string | null;
   message: string;
   tag: string;
 }
