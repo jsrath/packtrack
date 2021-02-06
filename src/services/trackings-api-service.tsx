@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import fetch, { Headers } from "node-fetch";
+import fetch, { Headers, Response } from "node-fetch";
 import { getEnvironmentVariables, TRACKINGS_URL } from "./config-service";
 import { ApiResponse, Tracking } from "../models/model";
 
@@ -38,13 +38,8 @@ export function TrackingsApiService(option: string, courier: string, trackingNum
       headers,
       body: JSON.stringify(tracking),
     });
-    const json: ApiResponse = await response.json();
-    if (json.meta.code !== 201) {
-      setApiError(json.meta.message);
-      return;
-    }
 
-    setData([json.data.tracking]);
+    processApiResponse(response);
   }
 
   async function getOrRemovePackage(isGetRequest: boolean) {
@@ -56,12 +51,12 @@ export function TrackingsApiService(option: string, courier: string, trackingNum
       method: isGetRequest ? "GET" : "DELETE",
       headers,
     });
+    processApiResponse(response);
+  }
+
+  async function processApiResponse(response: Response) {
     const json: ApiResponse = await response.json();
-    if (json.meta.code !== 201) {
-      setApiError(json.meta.message);
-      return;
-    }
-    setData([json.data.tracking]);
+    json.meta.code === 201 ? setData([json.data.tracking]) : setApiError(json.meta.message);
   }
 
   function returnAllPackages() {

@@ -14,11 +14,13 @@ const cli = meow(
     -a, --add       Add a package to track
     -r, --remove    Remove a package from tracking
     -c, --courier   Name of the company shipping your package 
+    -l, --list      List of couriers 
 
   Examples
     packtrack 20934234234
     packtrack --add 20934234234 --courier fedex
     packtrack --remove 20934234234
+    packtrack --list fedex
   `,
   {
     flags: {

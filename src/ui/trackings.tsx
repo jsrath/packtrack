@@ -11,7 +11,15 @@ const Trackings = (trackingOptions: TrackingOptions) => {
   const [data] = TrackingsApiService(validOption, courier, trackingNumber);
   const errorMessage = typeof data === "string" && data;
   const tracking = Array.isArray(data) && data;
-    
+
+  function formatDeliveryDate(expectedDelivery: string, deliveryDate: string): string {
+    if (!expectedDelivery && !deliveryDate) {
+      return "";
+    }
+
+    return formatRelative(parseISO(expectedDelivery ?? deliveryDate), new Date());
+  }
+
   function isDataValid(data: Tracking[] | string): boolean {
     if (typeof data === "string") {
       return false;
@@ -20,18 +28,16 @@ const Trackings = (trackingOptions: TrackingOptions) => {
   }
 
   const CustomCell = ({ children }: React.PropsWithChildren<{}>) => <Text wrap="end">{children}</Text>;
-  const CustomSkeleton = ({ children }: React.PropsWithChildren<{}>) => <Text color="green">{children}</Text>;
 
   return isDataValid(tracking) ? (
     <Table
       cell={CustomCell}
-      skeleton={CustomSkeleton}
       data={tracking.map((tracking: Tracking) => ({
         Tracking: tracking.tracking_number,
         Courier: tracking.slug,
         Location: tracking.checkpoints[tracking.checkpoints.length - 1]?.location ?? "",
         Status: tracking.checkpoints[tracking.checkpoints.length - 1]?.message ?? "",
-        Delivery: formatRelative(parseISO(tracking.expected_delivery ?? tracking.shipment_delivery_date), new Date()),
+        Delivery: formatDeliveryDate(tracking.expected_delivery, tracking.shipment_delivery_date),
       }))}
     />
   ) : (
